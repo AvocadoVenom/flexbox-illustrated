@@ -5,26 +5,12 @@
       <div class="playground">
         <h3>Playground</h3>
         <div class="playground-sandbox" :style="actualProperties">
-          <div class="box box--A" :style="actualPropertiesChildren">
-            A
-            <!-- <div class="size-info">150x150</div> -->
-          </div>
-          <div class="box box--B" :style="actualPropertiesChildren">
-            B
-            <!-- <div class="size-info">15x150</div> -->
-          </div>
-          <div class="box box--C" :style="actualPropertiesChildren">
-            C
-            <!-- <div class="size-info">150x15</div> -->
-          </div>
-          <div class="box box--D" :style="actualPropertiesChildren">
-            D
-            <!-- <div class="size-info">15x15</div> -->
-          </div>
-          <div class="box box--E" :style="actualPropertiesChildren">
-            E
-            <!-- <div class="size-info">75x100</div> -->
-          </div>
+          <box
+            v-for="b in maxBox"
+            :index="b"
+            :key="b"
+            :style="actualPropertiesChildren"
+          />
         </div>
       </div>
       <div class="settings">
@@ -41,6 +27,10 @@
             "
             @change="onPropertyChanged"
           />
+          <div class="box-setup">
+            <button type="button" @click="maxBox++">Add Box</button>
+            <button type="button" @click="maxBox--">Remove Box</button>
+          </div>
         </div>
       </div>
     </div>
@@ -61,11 +51,13 @@ import PropertySelector, {
   FlexProperty
 } from "@/components/PropertySelector.vue";
 
+import Box from "@/components/Box.vue";
+
 import * as FlexboxProperties from "@/models/flexbox-properties";
 
 export default Vue.extend({
   name: "App",
-  components: { PropertySelector },
+  components: { PropertySelector, Box },
   data: () => ({
     appName: "Flexbox Illustrated",
     FlexboxProperties,
@@ -78,7 +70,8 @@ export default Vue.extend({
     } as any,
     actualPropertiesChildren: {
       "align-self": FlexboxProperties.AlignSelfValues.AUTO
-    } as any
+    } as any,
+    maxBox: 5
   }),
   computed: {
     flexProperties(): FlexProperty[] {
@@ -152,46 +145,6 @@ h1 {
       margin-top: 0;
       background-color: whitesmoke;
       min-height: 570px;
-
-      .box {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-
-        .size-info {
-          position: relative;
-          top: 0;
-          left: 10px;
-          font-size: 9px;
-        }
-
-        &.box--A {
-          min-width: 150px;
-          height: 150px;
-          background-color: #3e9aff;
-        }
-        &.box--B {
-          min-width: 15px;
-          height: 150px;
-          background-color: #92e892;
-        }
-        &.box--C {
-          min-width: 150px;
-          height: 15px;
-          background-color: #ffe9ad;
-        }
-        &.box--D {
-          min-width: 15px;
-          height: 15px;
-          background-color: #e89293;
-        }
-        &.box--E {
-          min-width: 75px;
-          height: 100px;
-          background-color: #a4a1ff;
-        }
-      }
     }
   }
 
@@ -207,6 +160,18 @@ h1 {
       display: flex;
       flex-direction: column;
       align-content: stretch;
+    }
+
+    .box-setup {
+      display: flex;
+      padding: 10px;
+      > * {
+        flex: 0 0 calc(50% - 10px);
+
+        &:first-child {
+          margin-right: 20px;
+        }
+      }
     }
   }
 }
@@ -238,5 +203,10 @@ h1 {
       }
     }
   }
+}
+
+.appear-enter-active,
+.appear-leave-active {
+  transition: all 0.5s;
 }
 </style>
