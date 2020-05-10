@@ -37,7 +37,10 @@
               Remove Box
             </button>
           </div>
-          <label for="Flex grow">
+          <label
+            for="Flex grow"
+            style="align-self: flex-start; padding-left:10px"
+          >
             Flex grow
           </label>
           <div class="flex-width-setup">
@@ -52,7 +55,10 @@
               <option v-for="i in maxBox" :value="i" :key="i">{{ i }}</option>
             </select>
           </div>
-          <label for="Flex shrink">
+          <label
+            for="Flex shrink"
+            style="align-self: flex-start; padding-left:10px"
+          >
             Flex shrink
           </label>
           <div class="flex-width-setup">
