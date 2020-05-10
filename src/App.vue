@@ -9,7 +9,11 @@
             v-for="b in maxBox"
             :index="b"
             :key="b"
-            :style="actualPropertiesChildren"
+            :style="{
+              ...actualPropertiesChildren,
+              'flex-grow': flexGrow[b - 1],
+              'flex-shrink': flexShrink[b - 1]
+            }"
           />
         </div>
       </div>
@@ -29,7 +33,39 @@
           />
           <div class="box-setup">
             <button type="button" @click="maxBox++">Add Box</button>
-            <button type="button" @click="maxBox--">Remove Box</button>
+            <button type="button" @click="maxBox === 1 ? 0 : maxBox--">
+              Remove Box
+            </button>
+          </div>
+          <label for="Flex grow">
+            Flex grow
+          </label>
+          <div class="flex-width-setup">
+            <select
+              :name="'flex-grow-' + b"
+              :id="'flex-grow-' + b"
+              v-for="b in maxBox"
+              :key="b"
+              @change="updateFlexWidth(b, $event.target.value, 'grow')"
+            >
+              <option value="0" :key="0">0</option>
+              <option v-for="i in maxBox" :value="i" :key="i">{{ i }}</option>
+            </select>
+          </div>
+          <label for="Flex shrink">
+            Flex shrink
+          </label>
+          <div class="flex-width-setup">
+            <select
+              :name="'flex-shrink-' + b"
+              :id="'flex-shrink-' + b"
+              v-for="b in maxBox"
+              :key="b"
+              @change="updateFlexWidth(b, $event.target.value, 'shrink')"
+            >
+              <option value="0" :key="0">0</option>
+              <option v-for="i in maxBox" :value="i" :key="i">{{ i }}</option>
+            </select>
           </div>
         </div>
       </div>
@@ -71,7 +107,9 @@ export default Vue.extend({
     actualPropertiesChildren: {
       "align-self": FlexboxProperties.AlignSelfValues.AUTO
     } as any,
-    maxBox: 5
+    maxBox: 5,
+    flexGrow: Array(5).fill(0) as number[],
+    flexShrink: Array(5).fill(0) as number[]
   }),
   computed: {
     flexProperties(): FlexProperty[] {
@@ -97,6 +135,14 @@ export default Vue.extend({
       } else {
         this.actualProperties[data.id] = data.value;
       }
+    },
+    updateFlexWidth(i: number, value: number, prop: "grow" | "shrink"): void {
+      if (prop === "grow") {
+        this.flexGrow[i - 1] = Number(value);
+      } else {
+        this.flexShrink[i - 1] = Number(value);
+      }
+      this.$forceUpdate();
     }
   }
 });
@@ -171,6 +217,15 @@ h1 {
         &:first-child {
           margin-right: 20px;
         }
+      }
+    }
+
+    .flex-width-setup {
+      display: flex;
+      justify-content: space-evenly;
+      padding: 10px;
+      > *:not(:last-child) {
+        margin-right: 10px;
       }
     }
   }

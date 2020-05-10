@@ -1,5 +1,5 @@
 <template>
-  <div class="box box--A" :style="style">
+  <div class="box" :style="style">
     <div class="box-name">#{{ index }}</div>
     <div class="size-info">{{ w }}x{{ h }}</div>
   </div>
